@@ -5,10 +5,13 @@ import Link from "next/link";
 import { HiMenu } from "react-icons/hi";
 import { FiUsers } from "react-icons/fi";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const { data: session, status } = useSession();
+    const router = useRouter();
+    const pathname = usePathname();
 
     return (
         <div className=" bg-gray-900 text-white">
@@ -24,15 +27,17 @@ export default function Navbar() {
 
                     {/* Navigation Links */}
                     <div className="hidden md:flex items-center space-x-8">
-                        <a href="/" className="text-blue-400 hover:text-blue-300 transition-colors font-medium">
+                        <Link href="/" className={`hover:text-blue-300 transition-colors font-medium ${pathname === "/" ? "text-blue-300" : "text-gray-300"}`}>
                             HOME
-                        </a>
-                        <a href="/playerdash" className="text-gray-300 hover:text-white transition-colors font-medium">
+                        </Link>
+                        { session && <Link href="/playerdash" className={`hover:text-blue-300 transition-colors font-medium ${pathname === "/playerdash" ? "text-blue-300" : "text-gray-300"}`}>
                             PLAYER DASHBOARD
-                        </a>
-                        <a href="#contact" className="text-gray-300 hover:text-white transition-colors font-medium">
+                        </Link>
+                        }
+
+                        <Link href="#contact" className={`text-gray-300 hover:text-white transition-colors font-medium`}>
                             CONTACT US
-                        </a>
+                        </Link>
                         <FiUsers className="w-4 h-4 mr-1" />
                         XXX PLAYERS ONLINE
                     </div>
