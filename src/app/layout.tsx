@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import { Providers } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,12 +21,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body>
-        <div className="fixed top-0 z-50 w-full">
-          <Navbar />
-        </div>
-        <main className="pt-16">{children}</main>
+        <Providers>
+          <div className="fixed top-0 z-50 w-full">
+            <Navbar />
+          </div>
+          <main className="pt-16">{children}</main>
+        </Providers>
       </body>
     </html>
   );

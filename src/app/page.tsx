@@ -55,7 +55,7 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-gray-100 text-gray-900">
+      <section id="contact" className="py-20 bg-gray-100 text-gray-900 ">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-16 text-gray-800">CONTACT US</h2>
 
