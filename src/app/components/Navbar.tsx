@@ -22,7 +22,6 @@ export default function Navbar() {
         function handleOutside(e: MouseEvent | TouchEvent) {
             const el = rootRef.current;
             if (!el) return;
-            // ถ้าคลิกนอกกล่อง dropdown และนอกปุ่ม toggle → ปิด
             if (!el.contains(e.target as Node) && !btnRef.current?.contains(e.target as Node)) {
                 setOpen(false);
             }
