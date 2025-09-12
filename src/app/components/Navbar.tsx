@@ -7,9 +7,12 @@ import { FiUsers, FiMenu } from "react-icons/fi";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
+import Sidebar from "./sidebar";
+import SidebarWrapper from "./SidebarWrapper";
 
 
 export default function Navbar() {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [open, setOpen] = useState(false);
     const { data: session, status } = useSession();
@@ -39,6 +42,7 @@ export default function Navbar() {
             {/* Navbar */}
             <nav className="bg-gray-800 border-b h-20 border-gray-700 flex justify-center items-center px-4 py-3">
                 <div className="container w-full mx-auto flex items-center justify-between">
+                    
                     {/* Logo */}
                     <div className="flex items-center">
                         <div className="bg-gray-800 rounded-full w-16 h-16 flex items-center justify-center font-bold text-lg">
@@ -206,6 +210,7 @@ export default function Navbar() {
                     </div>
                 </div>
             </nav>
+            <SidebarWrapper open={sidebarOpen} setOpen={setSidebarOpen} />
         </div>
     );
 }
