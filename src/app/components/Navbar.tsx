@@ -6,6 +6,7 @@ import { HiMenu } from "react-icons/hi";
 import { FiUsers, FiMenu } from "react-icons/fi";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 
 export default function Navbar() {
@@ -14,6 +15,25 @@ export default function Navbar() {
     const { data: session, status } = useSession();
     const router = useRouter();
     const pathname = usePathname();
+    const rootRef = useRef<HTMLDivElement>(null);
+    const btnRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        function handleOutside(e: MouseEvent | TouchEvent) {
+            const el = rootRef.current;
+            if (!el) return;
+            // ถ้าคลิกนอกกล่อง dropdown และนอกปุ่ม toggle → ปิด
+            if (!el.contains(e.target as Node) && !btnRef.current?.contains(e.target as Node)) {
+                setOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleOutside);
+        document.addEventListener("touchstart", handleOutside, { passive: true });
+        return () => {
+            document.removeEventListener("mousedown", handleOutside);
+            document.removeEventListener("touchstart", handleOutside);
+        };
+    }, []);
 
     return (
         <div className=" bg-gray-900 text-white">
@@ -109,7 +129,8 @@ export default function Navbar() {
                     )}
 
                     {/* Login/Profile Section & Profile Dropdown */}
-                    <div className="flex items-center space-x-4 relative">
+                    <div className="flex items-center space-x-4 relative" ref={rootRef}>
+
                         {status === "loading" ? (
                             <div className="bg-gray-700 px-6 py-2 rounded-lg">
                                 Loading...
