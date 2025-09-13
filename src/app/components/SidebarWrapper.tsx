@@ -11,7 +11,11 @@ type SidebarWrapperProps = {
 
 export default function SidebarWrapper({ open, setOpen }: SidebarWrapperProps) {
   const pathname = usePathname();
-  const showSidebar = pathname.startsWith("/admindash");
+  const showSidebar =
+    pathname.startsWith("/viewDash") ||
+    pathname.startsWith("/gameMet") ||
+    pathname.startsWith("/manageUser") ||
+    pathname.startsWith("/manageRep");
 
   return showSidebar ? <Sidebar open={open} setOpen={setOpen} /> : null;
 }

@@ -14,28 +14,38 @@ export default function Sidebar({
     <aside
       id="default-sidebar"
       className={clsx(
-        "fixed top-20 left-0 z-40 w-64 h-screen transition-transform bg-gray-50 dark:bg-gray-800",
+        "fixed top-20 left-0 z-40 w-72 h-screen transition-transform bg-gray-50 dark:bg-gray-800",
         open ? "translate-x-0" : "-translate-x-full",
         "sm:translate-x-0"
       )}
       aria-label="Sidebar"
     >
-      <div className="h-full px-3 py-4 overflow-y-auto">
+      <div className="h-full px-3 py-10 overflow-y-auto">
         <ul className="space-y-2 font-medium">
-          <li>
+          <li className="space-y-10">
             <a
-              href="#"
-              className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              href="viewDash"
+              className="flex items-center p-2 text-gray-900 rounded-xl dark:text-black hover:bg-gray-100 dark:hover:bg-gray-400 group bg-[#D0D0D0]"
             >
-              <svg
-                className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                fill="currentColor"
-                viewBox="0 0 22 21"
-              >
-                <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-              </svg>
-              <span className="ms-3">Dashboard</span>
+              <span className="ms-3 text-xl">View Dashboard</span>
+            </a>
+            <a
+              href="gameMet"
+              className="flex items-center p-2 text-gray-900 rounded-xl dark:text-black hover:bg-gray-100 dark:hover:bg-gray-400 group bg-[#D0D0D0]"
+            >
+              <span className="ms-3 text-xl">Game Metrics</span>
+            </a>
+            <a
+              href="manageUser"
+              className="flex items-center p-2 text-gray-900 rounded-xl dark:text-black hover:bg-gray-100 dark:hover:bg-gray-400 group bg-[#D0D0D0]"
+            >
+              <span className="ms-3 text-xl">Manage Users Accounts</span>
+            </a>
+            <a
+              href="manageRep"
+              className="flex items-center p-2 text-gray-900 rounded-xl dark:text-black hover:bg-gray-100 dark:hover:bg-gray-400 group bg-[#D0D0D0]"
+            >
+              <span className="ms-3 text-xl">Manage Reports</span>
             </a>
           </li>
         </ul>

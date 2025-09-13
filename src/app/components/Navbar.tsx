@@ -171,7 +171,7 @@ export default function Navbar() {
                                                 Report
                                             </button>
                                         </Link>
-                                        <Link href="admindash">
+                                        <Link href="viewDash">
                                             <button
                                                 onClick={() => setOpen(false)}
                                                 className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors font-medium text-sm"
