@@ -1,26 +1,23 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { HiMenu } from "react-icons/hi";
 import { FiUsers, FiMenu } from "react-icons/fi";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
-import Sidebar from "./sidebar";
-import SidebarWrapper from "./SidebarWrapper";
 
 
 export default function Navbar() {
+    const pathname = usePathname();
+    const hiddenPaths = ["/viewDash", "/gameMet", "/manageUser", "/manageRep"];
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [open, setOpen] = useState(false);
     const { data: session, status } = useSession();
     const router = useRouter();
-    const pathname = usePathname();
     const rootRef = useRef<HTMLDivElement>(null);
     const btnRef = useRef<HTMLButtonElement>(null);
-
+    
     useEffect(() => {
         function handleOutside(e: MouseEvent | TouchEvent) {
             const el = rootRef.current;
@@ -36,7 +33,9 @@ export default function Navbar() {
             document.removeEventListener("touchstart", handleOutside);
         };
     }, []);
-
+    
+    if (hiddenPaths.includes(pathname)) return null;
+    
     return (
         <div className=" bg-gray-900 text-white">
             {/* Navbar */}
@@ -210,7 +209,7 @@ export default function Navbar() {
                     </div>
                 </div>
             </nav>
-            <SidebarWrapper open={sidebarOpen} setOpen={setSidebarOpen} />
+            {/* <SidebarWrapper open={sidebarOpen} setOpen={setSidebarOpen} /> */}
         </div>
     );
 }
