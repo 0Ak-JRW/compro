@@ -1,17 +1,14 @@
 "use client";
 import React from "react";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { MdOutlineDashboard } from "react-icons/md";
 
 export default function ViewDash() {
   return (
-    <div className="bg-[#EDF0F7] text-white pl-72 pt-10 min-h-screen">
-      <div id="viewDash" className="bg-[#EDF0F7] text-white min-h-screen">
+    <div className="bg-[#EDF0F7] text-white pl-64 pt-10 min-h-screen">
+      <div id="viewDash" className="bg-[#EDF0F7] text-white min-h-screen container mx-auto">
         <div className="flex items-end justify-start space-x-4">
-          <Icon
-            icon="mage:dashboard-fill"
-            className="text-6xl text-[#2D3648] mt-10 ml-10"
-          />
-          <h1 className="text-[#2D3648] text-4xl">View Dashboard</h1>
+          <MdOutlineDashboard className="text-6xl text-[#2D3648]" />
+          <h1 className="text-[#2D3648] text-4xl font-bold">View Dashboard</h1>
         </div>
         <div className="flex flex-col justify-center items-center space-y-4 container mx-auto">
           <div className="py-10 w-full space-y-20">
