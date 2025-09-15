@@ -5,11 +5,11 @@ import SearchBox from "../components/SearchBox";
 
 export default function manageUsers() {
   return (
-    <div className="bg-[#EDF0F7] text-white pl-64 pt-10 min-h-screen">
-      <div id="viewDash" className="bg-[#EDF0F7] text-white min-h-screen container mx-auto">
+    <div className="pl-64 pt-10 min-h-screen bg-[var(--background)] text-[var(--on-surface)]">
+      <div id="viewDash" className="min-h-screen container mx-auto bg-[var(--background)] text-[var(--on-surface)]">
         <div className="flex items-end justify-start space-x-4">
-          <LuUserCog className="text-6xl text-[#2D3648]" />
-          <h1 className="text-[#2D3648] text-4xl font-bold">Manage Users Accounts</h1>
+          <LuUserCog className="text-6xl" />
+          <h1 className="text-4xl font-bold">Manage Users Accounts</h1>
         </div>
 
         <div className="pt-5 pb-32 w-full space-y-5 container mx-auto">
@@ -17,7 +17,7 @@ export default function manageUsers() {
             <SearchBox />
           </div>
           <div className="flex items-center">
-            <div className="bg-[#2D3648] rounded-2xl w-full h-[700px] "></div>
+            <div className="bg-[var(--surface)] border border-[var(--border-card)] rounded-lg w-full h-[700px] "></div>
           </div>
         </div>
       </div>

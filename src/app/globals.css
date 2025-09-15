@@ -1,15 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #edf0f7; /* match existing page bg */
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --surface: #2d3648; /* match existing card surfaces */
+  --on-surface: #2d3648; /* heading/text color previously used */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,6 +12,25 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+}
+
+/* Explicit class-based theme override to work with a toggle */
+:root.light {
+  --background: #edf0f7;
+  --foreground: #171717;
+  --surface: #d0d3da;
+  --border-card: #212224;
+  --on-surface: #2d3648;
+  --bg-nav: #edf0f7;
+}
+
+:root.dark {
+  --background: #1c212c;
+  --foreground: #ededed;
+  --surface: #2d3648;
+  --border-card: #737a88;
+  --on-surface: #e5e7eb;
+  --bg-nav: #1e2939;
 }
 
 body {

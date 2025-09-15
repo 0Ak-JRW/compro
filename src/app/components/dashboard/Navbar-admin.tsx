@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useTheme } from "@/app/theme/ThemeProvider";
 import Sidebar from "./Sidebar-admin";
 
 const SHOW_PATHS = ["/viewDash", "/gameMet", "/manageUser", "/manageRep"];// เพิ่ม path ที่ต้องการให้โว์ Navbar
@@ -10,6 +11,7 @@ export default function Navbar() {
     const pathname = usePathname();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
     const shouldShow = SHOW_PATHS.some((path) =>
     pathname === path || pathname.startsWith(path + "/")
   );
@@ -36,7 +38,22 @@ export default function Navbar() {
                 <span className="self-center text-xl font-semibold sm:text-xl whitespace-nowrap dark:text-white">Dashboard</span>
               </a>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                aria-label="Toggle theme"
+                className="inline-flex items-center justify-center w-9 h-9 rounded-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600"
+                onClick={toggleTheme}
+                title={theme === "dark" ? "Switch to light" : "Switch to dark"}
+              >
+                {theme === "dark" ? (
+                  // sun icon
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z"/><path fillRule="evenodd" d="M12 2.25a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zm0 15a.75.75 0 01.75.75V20a.75.75 0 01-1.5 0v-1.5a.75.75 0 01.75-.75zm9-6.75a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5H20a.75.75 0 01.75.75zM6.75 12a.75.75 0 01-.75.75H4.5a.75.75 0 010-1.5h1.5a.75.75 0 01.75.75zm10.78 5.47a.75.75 0 011.06 0l1.06 1.06a.75.75 0 11-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zM4.36 4.36a.75.75 0 011.06 0L6.48 5.4a.75.75 0 11-1.06 1.06L4.36 5.42a.75.75 0 010-1.06zm13.18-1.06a.75.75 0 010 1.06L16.48 5.4a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zM6.48 18.6a.75.75 0 10-1.06 1.06l1.06 1.06a.75.75 0 101.06-1.06L6.48 18.6z" clipRule="evenodd"/></svg>
+                ) : (
+                  // moon icon
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M21.752 15.002A9 9 0 1112.998 2.25a.75.75 0 01.727.978 7.501 7.501 0 008.049 9.947.75.75 0 01.978.727z" clipRule="evenodd"/></svg>
+                )}
+              </button>
               <div className="relative">
                 <button
                   type="button"
