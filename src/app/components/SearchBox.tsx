@@ -1,6 +1,7 @@
 "use client";
 
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { IoSearch } from "react-icons/io5";
+import { RxCross2 } from "react-icons/rx";
 import { useState } from "react";
 
 export default function SearchBox() {
@@ -29,7 +30,7 @@ export default function SearchBox() {
           onChange={e => setQuery(e.target.value)}
         />
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <Icon icon="prime:search" className="w-6 h-6 text-gray-400 dark:text-black" />
+          <IoSearch className="w-6 h-6 text-gray-400 dark:text-black" />
         </div>
         {query && (
           <button
@@ -39,7 +40,7 @@ export default function SearchBox() {
             aria-label="Clear search"
             tabIndex={0}
           >
-            <Icon icon="codex:cross" className="w-6 h-6 text-gray-400 hover:text-gray-600 dark:text-black" />
+            <RxCross2 className="w-6 h-6 text-gray-400 hover:text-gray-600 dark:text-black" />
           </button>
         )}
       </div>

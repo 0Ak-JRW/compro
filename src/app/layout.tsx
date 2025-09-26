@@ -3,10 +3,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import NavbarAdmin from "./components/dashboard/Navbar-admin";
 import { Providers } from "./providers";
-import Sidebar from "./components/sidebar";
 import Footer from "./components/Footer";
-import SidebarWrapper from "./components/SidebarWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,12 +29,29 @@ export default function RootLayout({
 }) {
 
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            (function(){
+              try {
+                var stored = localStorage.getItem('theme');
+                var theme = stored === 'dark' || stored === 'light' ? stored : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                var root = document.documentElement;
+                root.classList.remove('light','dark');
+                root.classList.add(theme);
+              } catch (e) {}
+            })();
+          `,
+          }}
+        />
+      </head>
       <body>
         <Providers>
           <div className="fixed top-0 z-40 w-full">
             <Navbar />
-            {/* <SidebarWrapper /> */}
+            <NavbarAdmin />
           </div>
           <main className="pt-16">{children}</main>
           <section className="z-50">
