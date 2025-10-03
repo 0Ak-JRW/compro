@@ -4,7 +4,7 @@ import React from "react";
 
 const Footer = () => {
   const pathname = usePathname();
-  const hiddenPaths = ["/viewDash", "/gameMet", "/manageUser", "/manageRep"];
+  const hiddenPaths = ["/viewDash", "/gameMet", "/manageUser", "/manageRep", "/RepDetail"];
   if (hiddenPaths.includes(pathname)) return null;
   return (
     <div>

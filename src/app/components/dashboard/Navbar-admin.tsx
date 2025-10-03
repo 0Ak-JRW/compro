@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useTheme } from "@/app/theme/ThemeProvider";
 import Sidebar from "./Sidebar-admin";
 
-const SHOW_PATHS = ["/viewDash", "/gameMet", "/manageUser", "/manageRep"];// เพิ่ม path ที่ต้องการให้โว์ Navbar
+const SHOW_PATHS = ["/viewDash", "/gameMet", "/manageUser", "/manageRep", "/RepDetail"];// เพิ่ม path ที่ต้องการให้โว์ Navbar
 
 export default function Navbar() {
     const pathname = usePathname();

@@ -15,7 +15,8 @@ export default function SidebarWrapper({ open, setOpen }: SidebarWrapperProps) {
     pathname.startsWith("/viewDash") ||
     pathname.startsWith("/gameMet") ||
     pathname.startsWith("/manageUser") ||
-    pathname.startsWith("/manageRep");
+    pathname.startsWith("/manageRep") ||
+    pathname.startsWith("/RepDetail");
 
   return showSidebar ? <Sidebar open={open} setOpen={setOpen} /> : null;
 }

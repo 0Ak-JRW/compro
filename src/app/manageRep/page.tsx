@@ -3,8 +3,10 @@ import React from "react";
 import { TbFileReport } from "react-icons/tb";
 import { FiEye } from "react-icons/fi";
 import SearchBox from "../components/SearchBox";
+import Link from "next/link";
 
 type Report = {
+  id: number;
   subject: string;
   description: string;
   dateTime: string;
@@ -14,6 +16,7 @@ type Report = {
 
 const reports: Report[] = [
   {
+    id: 0,
     subject: "Bug",
     description: "เข้าเซิร์ฟแต่บัคในตัวเกมหลอดอาหารไม่ขึ้นอะไรเลย แก้ยังไงครับ",
     dateTime: "1-05-2025 12:24",
@@ -21,13 +24,15 @@ const reports: Report[] = [
     status: "In progress",
   },
   {
+    id: 1,
     subject: "Player",
-    description: "พวกเราใช้โปรแกรมช่วยเล่น ตรวจสอบให้หน่อยครับ",
+    description: "พวกเราเจอคนใช้โปรแกรมช่วยเล่น ตรวจสอบให้หน่อยครับ",
     dateTime: "29-04-2025 14:56",
     player: "Oakky",
     status: "Solved",
   },
   {
+    id: 2,
     subject: "Player",
     description: "พูดจาใช้คำไม่สุภาพรบกวนดูย้อนหลังให้ทีครับ",
     dateTime: "27-04-2025 18:23",
@@ -35,6 +40,7 @@ const reports: Report[] = [
     status: "Solved",
   },
   {
+    id: 3,
     subject: "Bug",
     description: "เข้าเซิร์ฟแล้วเด้งออกตลอดเลยครับ",
     dateTime: "25-04-2025 09:12",
@@ -135,12 +141,13 @@ export default function ManageReports() {
                           </td>
                           <td className="px-4 py-3 bg-[var(--surface-variant)] rounded-r-xl">
                             <div className="flex items-center justify-center">
-                              <button
-                                aria-label="View"
-                                className="p-1 rounded hover:bg-white/10 transition-colors"
+                              <Link
+                              href={`/RepDetail?id=${report.id}`}
+                              aria-label={`View report ${report.id} details`}
+                              className="p-1 rounded hover:bg-white/10 transition-colors"
                               >
-                                <FiEye className="text-lg" />
-                              </button>
+                              <FiEye className="text-lg" />
+                              </Link>
                             </div>
                           </td>
                         </tr>
