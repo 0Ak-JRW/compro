@@ -1,8 +1,6 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { HiMenu } from "react-icons/hi";
 import { FiUsers, FiMenu } from "react-icons/fi";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
@@ -10,14 +8,16 @@ import { useEffect, useRef } from "react";
 
 
 export default function Navbar() {
+    const pathname = usePathname();
+    const hiddenPaths = ["/viewDash", "/gameMet", "/manageUser", "/manageRep"];
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [open, setOpen] = useState(false);
     const { data: session, status } = useSession();
     const router = useRouter();
-    const pathname = usePathname();
     const rootRef = useRef<HTMLDivElement>(null);
     const btnRef = useRef<HTMLButtonElement>(null);
-
+    
     useEffect(() => {
         function handleOutside(e: MouseEvent | TouchEvent) {
             const el = rootRef.current;
@@ -33,12 +33,15 @@ export default function Navbar() {
             document.removeEventListener("touchstart", handleOutside);
         };
     }, []);
-
+    
+    if (hiddenPaths.includes(pathname)) return null;
+    
     return (
         <div className=" bg-gray-900 text-white">
             {/* Navbar */}
             <nav className="bg-gray-800 border-b h-20 border-gray-700 flex justify-center items-center px-4 py-3">
                 <div className="container w-full mx-auto flex items-center justify-between">
+                    
                     {/* Logo */}
                     <div className="flex items-center">
                         <div className="bg-gray-800 rounded-full w-16 h-16 flex items-center justify-center font-bold text-lg">
@@ -167,7 +170,7 @@ export default function Navbar() {
                                                 Report
                                             </button>
                                         </Link>
-                                        <Link href="admindash">
+                                        <Link href="viewDash">
                                             <button
                                                 onClick={() => setOpen(false)}
                                                 className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors font-medium text-sm"
@@ -206,6 +209,7 @@ export default function Navbar() {
                     </div>
                 </div>
             </nav>
+            {/* <SidebarWrapper open={sidebarOpen} setOpen={setSidebarOpen} /> */}
         </div>
     );
 }
