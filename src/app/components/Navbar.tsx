@@ -39,10 +39,10 @@ export default function Navbar() {
 
     useEffect(() => {
         router.refresh();
-    }, [loading]);
+    }, [session]);
     
 
-    // console.log("Session:", session?.id, session?.avatar);
+    // console.log("Session:", session);
     // console.log('avatar url:', `https://cdn.discordapp.com/avatars/${session?.id}/${session?.avatar}.png`);
     const goLogin = () => {
         // router.push("/api/auth/signin");
@@ -187,7 +187,7 @@ export default function Navbar() {
                                             </button>
                                         </Link>
                                         <Link href="viewDash">
-                                            <button
+                                            <button disabled={session?.group !== 'admin' && session?.group !== 'superadmin'}
                                                 onClick={() => setOpen(false)}
                                                 className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors font-medium text-sm"
                                             >

@@ -21,7 +21,7 @@ export default function playerdash() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + `/user/stats/${2}`, {
+        const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + `/user/stats/${session?.data?.refId}`, {
           // params: {
           //   userId: "2", 
           // },
@@ -34,6 +34,7 @@ export default function playerdash() {
 
     fetchData();
   }, []);
+  console.log(session)
 
   return (
     <div className="bg-gradient-to-br from-[#1a1f2e] via-[#2D3648] to-[#1a1f2e] min-h-screen text-white">

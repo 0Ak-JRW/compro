@@ -2,68 +2,79 @@
 import React, { useState, useEffect } from "react";
 import { TbFileReport } from "react-icons/tb";
 import { useSearchParams } from "next/navigation";
+import axios from "axios";
+import { useAuth } from "@/hooks/useAuth";
 
-const reports = [
-    {
-        id: 0,
-        subject: "Bug",
-        description: "เข้าเซิร์ฟแต่บัคในตัวเกมหลอดอาหารไม่ขึ้นอะไรเลย แก้ยังไงครับ",
-        dateTime: "1-05-2025 12:24",
-        player: "Teddy",
-        status: "In progress",
-    },
-    {
-        id: 1,
-        subject: "Player",
-        description: "พวกเราเจอคนใช้โปรแกรมช่วยเล่น ตรวจสอบให้หน่อยครับ",
-        dateTime: "29-04-2025 14:56",
-        player: "Oakky",
-        status: "Solved",
-    },
-    {
-        id: 2,
-        subject: "Player",
-        description: "พูดจาใช้คำไม่สุภาพรบกวนดูย้อนหลังให้ทีครับ",
-        dateTime: "27-04-2025 18:23",
-        player: "Folky",
-        status: "Solved",
-    },
-    {
-        id: 3,
-        subject: "Bug",
-        description: "เข้าเซิร์ฟแล้วเด้งออกตลอดเลยครับ",
-        dateTime: "25-04-2025 09:12",
-        player: "MewMew",
-        status: "In progress",
-    },
-];
+
+interface Report {
+    id: number;
+    subject: string;
+    description: string;
+    dateTime: string;
+    player: string;
+    status: string;
+}
+
 
 export default function RepDetail() {
     const [status, setStatus] = useState("Solved");
     const [feedback, setFeedback] = useState("");
-    const [reportData, setReportData] = useState(reports[0]); // Default to first report
+    const [reportData, setReportData] = useState<Report | undefined>(undefined); // Default to first report
     const searchParams = useSearchParams();
+    const { user: session, loading, logout } = useAuth();
 
     useEffect(() => {
         const reportId = searchParams.get('id');
-        if (reportId !== null) {
-            const id = parseInt(reportId);
-            const report = reports.find(r => r.id === id);
-            if (report) {
-                setReportData(report);
-                setStatus(report.status);
+        const fetchReport = async () => {
+            if (reportId !== null) {
+                const id = parseInt(reportId);
+                // const report = reports.find(r => r.id === id);
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/admin/reports/${id}`);
+
+                const item = response.data.data[0];
+
+                const mappedReport: Report = {
+                    id: item.id,
+                    subject: item.title,
+                    description: item.detail,
+                    dateTime: item.datetime,
+                    player: item.reporterId,
+                    status: item.status === "SOLVE" ? "Solved" : "In-Progress",
+                };
+
+                console.log("Mapped Report:", mappedReport);
+
+
+                setReportData(mappedReport);
+                setStatus(mappedReport.status);
+
             }
         }
+        fetchReport();
     }, [searchParams]);
+
 
     const handleStatusChange = (newStatus: string) => {
         setStatus(newStatus);
     };
 
     const handleSubmit = () => {
+        try {
+            if (!reportData) return;
 
-        console.log("Feedback submitted:", feedback);
-        console.log("Status:", status);
+            console.log({ reportId: reportData.id, status, feedback });
+            axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/admin/feedback`,
+                {
+                    reportId: reportData.id,
+                    adminID: session?.refId,
+                    status: status === "Solved" ? "SOLVE" : "IN-PROGRESS",
+                    feedbackText: feedback
+                }
+            )
+
+        } catch (error) {
+            console.error("Error submitting report update:", error);
+        }
 
     };
 
@@ -78,59 +89,61 @@ export default function RepDetail() {
                 </div>
 
                 <div className="bg-[var(--surface)] border border-[var(--border-card)] rounded-lg w-full min-h-[600px] mt-8">
-                    <div className="p-8 space-y-6">
-                        <div className="flex justify-between items-center pb-4 border-b border-[var(--border-card)]">
-                            <div className="text-lg font-medium">Player : {reportData.player}</div>
-                            <div className="text-lg font-medium">Date Time : {reportData.dateTime}</div>
-                            <div className="text-lg font-medium">Subject : {reportData.subject}</div>
-                        </div>
-
-                        {/* Description */}
-                        <div className="space-y-4">
-                            <h2 className="text-2xl font-semibold">Description</h2>
-                            <div className="bg-[var(--surface-variant)] border border-[var(--border-card)] rounded-lg p-6 min-h-[200px]">
-                                <p className="text-[var(--on-surface)] leading-relaxed">
-                                    {reportData.description}
-                                </p>
+                    {reportData && (
+                        <div className="p-8 space-y-6">
+                            <div className="flex justify-between items-center pb-4 border-b border-[var(--border-card)]">
+                                <div className="text-lg font-medium">Player : {reportData.player}</div>
+                                <div className="text-lg font-medium">Date Time : {reportData.dateTime}</div>
+                                <div className="text-lg font-medium">Subject : {reportData.subject}</div>
                             </div>
-                        </div>
 
-                        {/* Feedback */}
-                        <div className="space-y-4">
-                            <h2 className="text-2xl font-semibold">Feedback</h2>
-                            <textarea
-                                value={feedback}
-                                onChange={(e) => setFeedback(e.target.value)}
-                                placeholder="Input text"
-                                className="w-full h-32 p-4 bg-[var(--surface-variant)] border border-[var(--border-card)] rounded-lg resize-none text-[var(--on-surface)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="flex justify-end space-x-4 pt-6">
-                            <div className="relative">
-                                <select
-                                    value={status}
-                                    onChange={(e) => handleStatusChange(e.target.value)}
-                                    className="appearance-none bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-3 px-6 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-500 pr-10"
-                                >
-                                    <option value="Solved">Solved</option>
-                                    <option value="In Progress">In Progress</option>
-                                </select>
-                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                    </svg>
+                            {/* Description */}
+                            <div className="space-y-4">
+                                <h2 className="text-2xl font-semibold">Description</h2>
+                                <div className="bg-[var(--surface-variant)] border border-[var(--border-card)] rounded-lg p-6 min-h-[200px]">
+                                    <p className="text-[var(--on-surface)] leading-relaxed">
+                                        {reportData.description}
+                                    </p>
                                 </div>
                             </div>
-                            <button
-                                onClick={handleSubmit}
-                                className="bg-gray-700 hover:bg-gray-800 text-white font-medium py-3 px-8 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
-                            >
-                                Submit
-                            </button>
+
+                            {/* Feedback */}
+                            <div className="space-y-4">
+                                <h2 className="text-2xl font-semibold">Feedback</h2>
+                                <textarea
+                                    value={feedback}
+                                    onChange={(e) => setFeedback(e.target.value)}
+                                    placeholder="Input text"
+                                    className="w-full h-32 p-4 bg-[var(--surface-variant)] border border-[var(--border-card)] rounded-lg resize-none text-[var(--on-surface)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex justify-end space-x-4 pt-6">
+                                <div className="relative">
+                                    <select
+                                        value={status}
+                                        onChange={(e) => handleStatusChange(e.target.value)}
+                                        className="appearance-none bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-3 px-6 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-500 pr-10"
+                                    >
+                                        <option value="Solved">Solved</option>
+                                        <option value="In-Progress">In Progress</option>
+                                    </select>
+                                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={handleSubmit}
+                                    className="bg-gray-700 hover:bg-gray-800 text-white font-medium py-3 px-8 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                >
+                                    Submit
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>

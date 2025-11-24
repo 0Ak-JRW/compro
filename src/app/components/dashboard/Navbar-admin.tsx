@@ -4,15 +4,18 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useTheme } from "@/app/theme/ThemeProvider";
 import Sidebar from "./Sidebar-admin";
+import { useAuth } from "@/hooks/useAuth";
 
 const SHOW_PATHS = ["/viewDash", "/gameMet", "/manageUser", "/manageRep", "/RepDetail"];// เพิ่ม path ที่ต้องการให้โว์ Navbar
 
 export default function Navbar() {
-    const pathname = usePathname();
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
+  const pathname = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
-    const shouldShow = SHOW_PATHS.some((path) =>
+  const { user: session, loading, logout } = useAuth();
+  
+  const shouldShow = SHOW_PATHS.some((path) =>
     pathname === path || pathname.startsWith(path + "/")
   );
   if (!shouldShow) return null;
@@ -30,7 +33,7 @@ export default function Navbar() {
                 onClick={() => setSidebarOpen(true)}
               >
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                  <path clipRule="evenodd" fillRule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"/>
+                  <path clipRule="evenodd" fillRule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z" />
                 </svg>
               </button>
               <a href="#" className="flex ms-2 md:me-24">
@@ -48,10 +51,10 @@ export default function Navbar() {
               >
                 {theme === "dark" ? (
                   // sun icon
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z"/><path fillRule="evenodd" d="M12 2.25a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zm0 15a.75.75 0 01.75.75V20a.75.75 0 01-1.5 0v-1.5a.75.75 0 01.75-.75zm9-6.75a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5H20a.75.75 0 01.75.75zM6.75 12a.75.75 0 01-.75.75H4.5a.75.75 0 010-1.5h1.5a.75.75 0 01.75.75zm10.78 5.47a.75.75 0 011.06 0l1.06 1.06a.75.75 0 11-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zM4.36 4.36a.75.75 0 011.06 0L6.48 5.4a.75.75 0 11-1.06 1.06L4.36 5.42a.75.75 0 010-1.06zm13.18-1.06a.75.75 0 010 1.06L16.48 5.4a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zM6.48 18.6a.75.75 0 10-1.06 1.06l1.06 1.06a.75.75 0 101.06-1.06L6.48 18.6z" clipRule="evenodd"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z" /><path fillRule="evenodd" d="M12 2.25a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zm0 15a.75.75 0 01.75.75V20a.75.75 0 01-1.5 0v-1.5a.75.75 0 01.75-.75zm9-6.75a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5H20a.75.75 0 01.75.75zM6.75 12a.75.75 0 01-.75.75H4.5a.75.75 0 010-1.5h1.5a.75.75 0 01.75.75zm10.78 5.47a.75.75 0 011.06 0l1.06 1.06a.75.75 0 11-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zM4.36 4.36a.75.75 0 011.06 0L6.48 5.4a.75.75 0 11-1.06 1.06L4.36 5.42a.75.75 0 010-1.06zm13.18-1.06a.75.75 0 010 1.06L16.48 5.4a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zM6.48 18.6a.75.75 0 10-1.06 1.06l1.06 1.06a.75.75 0 101.06-1.06L6.48 18.6z" clipRule="evenodd" /></svg>
                 ) : (
                   // moon icon
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M21.752 15.002A9 9 0 1112.998 2.25a.75.75 0 01.727.978 7.501 7.501 0 008.049 9.947.75.75 0 01.978.727z" clipRule="evenodd"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M21.752 15.002A9 9 0 1112.998 2.25a.75.75 0 01.727.978 7.501 7.501 0 008.049 9.947.75.75 0 01.978.727z" clipRule="evenodd" /></svg>
                 )}
               </button>
               <div className="relative">
@@ -62,7 +65,7 @@ export default function Navbar() {
                   onClick={() => setDropdownOpen((open) => !open)}
                 >
                   <span className="sr-only">Open user menu</span>
-                  <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user" />
+                  <img className="w-8 h-8 rounded-full" src={`https://cdn.discordapp.com/avatars/${session?.id}/${session?.avatar}.png`} alt="user" />
                 </button>
                 {dropdownOpen && (
                   <div

@@ -1,7 +1,8 @@
 "use client";
 import { LuUserCog } from "react-icons/lu";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchBox from "../components/SearchBox";
+import axios from "axios";
 
 const users = [
   { name: "Folky" },
@@ -13,6 +14,27 @@ const users = [
   .map((user, index) => ({ id: index + 1, ...user }));
 
 export default function manageUsers() {
+
+  const [users, setUsers] = useState<{ id: number; name: string }[]>([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/admin/users`).then((response) => {
+          console.log("Fetched users:", response.data);
+          const users = response.data.data.map((item: any, index: number) => ({
+            id: index + 1,
+            name: item.firstname + " " + item.lastname,
+          }));
+          setUsers(users);
+        });
+
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchUsers();
+  }, []);
   return (
     <div className="bg-[var(--background)] text-[var(--on-surface)] pl-72 pt-10 min-h-screen">
       <div id="viewDash" className="bg-[var(--background)] text-[var(--on-surface)] min-h-screen">
