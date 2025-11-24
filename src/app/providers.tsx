@@ -5,8 +5,8 @@ import { ThemeProvider } from "./theme/ThemeProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <SessionProvider>
+    // <SessionProvider>
       <ThemeProvider>{children}</ThemeProvider>
-    </SessionProvider>
+    // </SessionProvider>
   );
 }

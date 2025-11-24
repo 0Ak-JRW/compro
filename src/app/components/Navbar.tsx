@@ -2,9 +2,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FiUsers, FiMenu } from "react-icons/fi";
-import { useSession, signIn, signOut } from "next-auth/react";
+// import { useSession, signIn, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 
 export default function Navbar() {
@@ -13,10 +14,12 @@ export default function Navbar() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [open, setOpen] = useState(false);
-    const { data: session, status } = useSession();
+    // const { data: session, status } = useSession();
     const router = useRouter();
     const rootRef = useRef<HTMLDivElement>(null);
     const btnRef = useRef<HTMLButtonElement>(null);
+
+    const { user: session, loading, logout } = useAuth();
     
     useEffect(() => {
         function handleOutside(e: MouseEvent | TouchEvent) {
@@ -33,7 +36,20 @@ export default function Navbar() {
             document.removeEventListener("touchstart", handleOutside);
         };
     }, []);
+
+    useEffect(() => {
+        router.refresh();
+    }, [session]);
     
+
+    // console.log("Session:", session);
+    // console.log('avatar url:', `https://cdn.discordapp.com/avatars/${session?.id}/${session?.avatar}.png`);
+    const goLogin = () => {
+        // router.push("/api/auth/signin");
+        // window.location.href = `http://localhost:3002/auth/discord`;
+        window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/discord`;
+
+    }
     if (hiddenPaths.includes(pathname)) return null;
     
     return (
@@ -45,7 +61,7 @@ export default function Navbar() {
                     {/* Logo */}
                     <div className="flex items-center">
                         <div className="bg-gray-800 rounded-full w-16 h-16 flex items-center justify-center font-bold text-lg">
-                            <img src="images/logo.png" alt="Logo" className="w-fit h-fit" />
+                            <img src="../images/logo.png" alt="Logo" className="w-fit h-fit" />
                         </div>
                     </div>
 
@@ -133,7 +149,7 @@ export default function Navbar() {
                     {/* Login/Profile Section & Profile Dropdown */}
                     <div className="flex items-center space-x-4 relative" ref={rootRef}>
 
-                        {status === "loading" ? (
+                        {loading ? (
                             <div className="bg-gray-700 px-6 py-2 rounded-lg">
                                 Loading...
                             </div>
@@ -144,23 +160,23 @@ export default function Navbar() {
                                     onClick={() => setOpen((prev: boolean) => !prev)}
                                     tabIndex={0}
                                 >
-                                    {session.user?.image && (
+                                    {session?.avatar && (
                                         <img
-                                            src={session.user.image}
+                                            src={`https://cdn.discordapp.com/avatars/${session?.id}/${session?.avatar}.png`}
                                             alt="Profile"
                                             className="w-8 h-8 rounded-full"
                                         />
                                     )}
-                                    <span className="text-sm font-medium">
-                                        {session.user?.name}
-                                    </span>
+                                    {/* <span className="text-sm font-medium">
+                                        {session?.username}
+                                    </span> */}
                                 </div>
 
                                 {/* Dropdown */}
                                 {open && (
                                     <div className="absolute right-0 top-12 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg z-50">
                                         <div className="px-4 py-3 border-b">
-                                            <div className="font-semibold">{session.user?.name}</div>
+                                            <div className="font-semibold">{session?.username}</div>
                                         </div>
                                         <Link href="report">
                                             <button
@@ -171,7 +187,7 @@ export default function Navbar() {
                                             </button>
                                         </Link>
                                         <Link href="viewDash">
-                                            <button
+                                            <button disabled={session?.group !== 'admin' && session?.group !== 'superadmin'}
                                                 onClick={() => setOpen(false)}
                                                 className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors font-medium text-sm"
                                             >
@@ -187,7 +203,7 @@ export default function Navbar() {
                                             </button>
                                         </Link>
                                         <button
-                                            onClick={() => signOut()}
+                                            onClick={() => logout()}
                                             className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors font-medium text-sm"
                                         >
                                             Logout
@@ -197,7 +213,8 @@ export default function Navbar() {
                             </div>
                         ) : (
                             <button
-                                onClick={() => signIn("discord")}
+                                // onClick={() => signIn("discord")}
+                                onClick={() => goLogin()}
                                 className="bg-indigo-600 hover:bg-indigo-700 px-6 py-2 rounded-lg transition-colors font-medium flex items-center space-x-2"
                             >
                                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
