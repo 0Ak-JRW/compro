@@ -176,7 +176,7 @@ export default function Navbar() {
                                 {open && (
                                     <div className="absolute right-0 top-12 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg z-50">
                                         <div className="px-4 py-3 border-b">
-                                            <div className="font-semibold">{session?.username}</div>
+                                            <div className="font-semibold">{session?.inGameName}</div>
                                         </div>
                                         <Link href="report">
                                             <button
