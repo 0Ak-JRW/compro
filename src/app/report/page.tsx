@@ -1,5 +1,8 @@
 "use client";
+import axios from "axios";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+
 
 type IssueMap = Record<string, string[]>;
 
@@ -13,6 +16,7 @@ export default function ReportPage() {
     const [category, setCategory] = useState("");
     const [issue, setIssue] = useState("");
     const [desc, setDesc] = useState("");
+    const { user: session, loading, logout } = useAuth();
 
     const issuesForCategory = category ? ISSUE_OPTIONS[category] : [];
 
@@ -22,13 +26,27 @@ export default function ReportPage() {
         e.preventDefault();
         if (!canSubmit) return;
 
-        // TODO: call your API here
         console.log({ category, issue, description: desc });
+        try {
+            axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/reports`,
+                {
+                    reporterId: session?.refId,
+                    title: category,
+                    subTitle: issue,
+                    detail: desc
+                }
+            )
+
+        } catch (error) {
+            console.error("Error submitting report:", error);
+        }
 
         // reset form
         setCategory("");
         setIssue("");
         setDesc("");
+
+
         alert("Report submitted. Thank you!");
     };
 
