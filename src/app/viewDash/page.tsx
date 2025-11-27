@@ -18,12 +18,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export const description = "An interactive pie chart"
 
 const chartData = [
-  { month: "january", desktop: 186, mobile: 80},
-  { month: "february", desktop: 305, mobile: 200},
-  { month: "march", desktop: 237, mobile: 120},
-  { month: "april", desktop: 173, mobile: 190},
-  { month: "may", desktop: 209, mobile: 130},
+  { month: "january", desktop: 186, mobile: 80 },
+  { month: "february", desktop: 305, mobile: 200 },
+  { month: "march", desktop: 237, mobile: 120 },
+  { month: "april", desktop: 173, mobile: 190 },
+  { month: "may", desktop: 209, mobile: 130 },
 ]
+const playerData = [
+  { name: "Player1", kills: 150 },
+  { name: "Player2", kills: 120 },
+  { name: "Player3", kills: 100 },
+  { name: "Player4", kills: 90 },
+  { name: "Player5", kills: 80 },
+];
 
 const chartConfig = {
   visitors: {
@@ -119,55 +126,35 @@ export default function ViewDash() {
 
               </div> */}
               {/* <div className="bg-[var(--surface)] border border-[var(--border-card)] rounded-lg w-full h-[260px] "> */}
-              <Card className="bg-[var(--surface)] border border-[var(--border-card)] rounded-lg w-full  ">
+              <Card className="bg-[var(--surface)] border border-[var(--border-card)] rounded-lg w-full">
                 <CardHeader>
-                  <CardTitle>Area Chart</CardTitle>
+                  <CardTitle>Player Activity Summary</CardTitle>
                   <CardDescription>
-                    Showing total visitors for the last 6 months
+                    Player statistics overview
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ChartContainer config={chartConfig}>
-                    <AreaChart
-                      accessibilityLayer
-                      data={chartData}
-                      margin={{
-                        left: 12,
-                        right: 12,
-                      }}
-                    >
-                      <CartesianGrid vertical={false} />
-                      <XAxis
-                        dataKey="month"
-                        tickLine={false}
-                        axisLine={false}
-                        tickMargin={8}
-                        tickFormatter={(value) => value.slice(0, 3)}
-                      />
-                      <ChartTooltip
-                        cursor={false}
-                        content={<ChartTooltipContent indicator="line" />}
-                      />
-                      <Area
-                        dataKey="desktop"
-                        type="natural"
-                        fill="var(--desktop)"
-                        fillOpacity={0.4}
-                        stroke="var(--desktop)"
-                      />
-                    </AreaChart>
-                  </ChartContainer>
-                </CardContent>
-                <CardFooter>
-                  <div className="flex w-full items-start gap-2 text-sm">
-                    <div className="grid gap-2">
-                      <div className="flex items-center gap-2 leading-none font-medium">
-                        Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-                      </div>
-                      <div className="text-muted-foreground flex items-center gap-2 leading-none">
-                        January - June 2024
-                      </div>
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-6 text-sm font-semibold pb-2 border-b border-[var(--border-card)]">
+                      <div>Player</div>
+                      <div>Kill</div>
                     </div>
+                    <div className="space-y-2">
+                      {playerData.map((player, index) => (
+                        <div key={index} className="grid grid-cols-2 gap-6 text-sm">
+                          <div>{player.name}</div>
+                          <div>{player.kills}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex-col items-start gap-2 text-sm">
+                  <div className="flex gap-2 leading-none font-medium">
+                    &nbsp;
+                  </div>
+                  <div className="text-muted-foreground leading-none">
+                    &nbsp;
                   </div>
                 </CardFooter>
               </Card>
@@ -187,8 +174,7 @@ export default function ViewDash() {
                       <SelectValue placeholder="Select month" />
                     </SelectTrigger>
                     <SelectContent align="end" className="rounded-xl">
-                      {months.map((key) => 
-                      {
+                      {months.map((key) => {
                         const config = chartConfig[key as keyof typeof chartConfig]
                         // console.log(config?.color );
                         if (!config) {
@@ -200,7 +186,7 @@ export default function ViewDash() {
                             value={key}
                             className="rounded-lg [&_span]:flex"
                           >
-                          
+
                             <div className="flex items-center gap-2 text-xs">
                               <span
                                 className="flex h-3 w-3 shrink-0 rounded-xs"
@@ -229,7 +215,7 @@ export default function ViewDash() {
                         cursor={false}
                         content={<ChartTooltipContent hideLabel />}
                       />
-                        <Pie
+                      <Pie
                         data={chartData}
                         dataKey="desktop"
                         nameKey="month"
@@ -241,20 +227,20 @@ export default function ViewDash() {
                           ...props
                         }: PieSectorDataItem) => (
                           <g>
-                          <Sector {...props} outerRadius={outerRadius + 10} />
-                          <Sector
-                            {...props}
-                            outerRadius={outerRadius + 25}
-                            innerRadius={outerRadius + 12}
-                          />
+                            <Sector {...props} outerRadius={outerRadius + 10} />
+                            <Sector
+                              {...props}
+                              outerRadius={outerRadius + 25}
+                              innerRadius={outerRadius + 12}
+                            />
                           </g>
                         )}
-                        >
+                      >
                         {chartData.map((entry, index) => (
                           // console.log(chartConfig[entry.month as keyof typeof chartConfig]?.color ),
-                          <Cell 
-                          key={`cell-${index}`} 
-                          fill={`var(--${chartConfig[entry.month as keyof typeof chartConfig]?.color})`}
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={`var(--${chartConfig[entry.month as keyof typeof chartConfig]?.color})`}
                           />
                         ))}
                         <Label
