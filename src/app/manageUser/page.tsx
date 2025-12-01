@@ -18,12 +18,13 @@ const users = [
   .map((user, index) => ({ id: index + 1, ...user }));
 
 export default function manageUsers() {
-  const [users, setUsers] = useState<{ id: number; name: string }[]>([]);
+  const [users, setUsers] = useState<{ id: number; userId: number; name: string; ban_status: string; reason: string;}[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [time, setTime] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [selectedBans, setSelectedBans] = useState("Bans");
+  const [selectedUser, setSelectedUser] = useState<{ id: number; userId: number; name: string; ban_status: string; reason: string } | null>(null);
+  const [selectedBans, setSelectedBans] = useState( "Bans");
   const banOptions = [
     "Bans",
     "1 Day",
@@ -33,8 +34,35 @@ export default function manageUsers() {
     "Permanent",
     "Unbans",
   ];
+  
+  const handleEdit = (id: number) => {
+    // console.log(users.find((user) => user.id === id));\
+    const user = users.find((user) => user.userId === id);
+    if (!user) return;
+    setSelectedUser({
+      id: user.id,
+      userId: user.userId,
+      name: user.name,
+      ban_status: user.ban_status,
+      reason: user.reason,
+    });
+    setShowModal(true);
+    setSelectedBans(user.ban_status);
+    setMessage(user.reason);
+  }
 
-  const handleSubmit = () => {
+  const handleSubmit = async (userId: number | undefined) => {
+    console.log("Submitting form for user ID:", userId);
+
+    try {
+      const response = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/admin/ban-user/${userId}`, {
+        status: selectedBans,
+        reason: message,
+      });
+      console.log("Form submitted successfully:", response);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
     setShowModal(false);
     setTime("");
     setEmail("");
@@ -51,7 +79,10 @@ export default function manageUsers() {
             const users = response.data.data.map(
               (item: any, index: number) => ({
                 id: index + 1,
+                userId: item.id,
                 name: item.firstname + " " + item.lastname,
+                ban_status: item.ban_status,
+                reason: item.ban_reason,
               })
             );
             setUsers(users);
@@ -62,6 +93,8 @@ export default function manageUsers() {
     };
     fetchUsers();
   }, []);
+  
+  console.log("Users state:", users);
   return (
     <div className="bg-[var(--background)] text-[var(--on-surface)] pl-72 pt-10 min-h-screen">
       <style>{`
@@ -121,7 +154,7 @@ export default function manageUsers() {
                         <td className="px-6 py-3 bg-[#445269] rounded-r-xl">
                           <div className="flex gap-2 justify-start">
                             <button
-                              onClick={() => setShowModal(true)}
+                              onClick={() => handleEdit(user.userId)}
                               className="bg-blue-500 hover:bg-blue-600 transition-colors text-white text-sm font-medium py-1.5 px-4 rounded"
                             >
                               Edit
@@ -133,26 +166,30 @@ export default function manageUsers() {
                           <Modal
                             isOpen={showModal}
                             onClose={() => setShowModal(false)}
-                            title="userID: 943752759 | Fullname :Teddy"
+                            title={`userID: ${selectedUser?.userId} | Fullname :${selectedUser?.name}`}
                             size="md"
                           >
                             <div className="space-y-4">
-                              <div>
+                              {/* <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                   Time
                                 </label>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                   04/26/2025 22:31:49
                                 </label>
-                              </div>
+                              </div> */}
 
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                   Reason
                                 </label>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                  ใช้โปรแกรมโกง
-                                </label>
+                                <input
+                                  type="text"
+                                  value={message}
+                                  onChange={(e) => setMessage(e.target.value)}
+                                  placeholder="Enter reason..."
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+                                />
                               </div>
 
                               <div>
@@ -190,7 +227,7 @@ export default function manageUsers() {
                                 ยกเลิก
                               </button>
                               <button
-                                onClick={handleSubmit}
+                                onClick={() => handleSubmit(selectedUser?.userId)}
                                 className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                               >
                                 บันทึก
