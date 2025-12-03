@@ -6,7 +6,7 @@ import { useTheme } from "@/app/theme/ThemeProvider";
 import Sidebar from "./Sidebar-admin";
 import { useAuth } from "@/hooks/useAuth";
 
-const SHOW_PATHS = ["/viewDash", "/gameMet", "/manageUser", "/manageRep", "/RepDetail"];
+const SHOW_PATHS = ["/viewDash", "/gameMet", "/manageUser", "/manageRep", "/RepDetail", "/Description"];
 
 export default function Navbar() {
   const pathname = usePathname();
